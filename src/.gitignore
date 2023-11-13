@@ -1,0 +1,5 @@
+.deps
+*.c.o
+*.S.o
+*.elf
+*.hex

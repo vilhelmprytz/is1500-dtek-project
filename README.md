@@ -11,6 +11,10 @@ The following files:
 - `src/Makefile`
 - `src/stubs.c`
 - `src/vector.S`
+- `src/mipslabfunc.c`
+- `src/mipslab.h`
+- `src/mipslabdata.c`
+- some parts of `src/tetris.c`
 
 ... are **NOT** covered by the MIT License. The LICENSE for these files is located in [src/COPYING](src/COPYING).
 
