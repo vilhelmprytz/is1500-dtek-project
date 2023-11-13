@@ -16,6 +16,32 @@ embedded platform with limited resources.
 - The next block will be displayed on the screen
 - Both the current score and the high score will be visible, with the option to enter initials when the game ends. Optionally, we will implement high score storage between power cycles (i.e., that it is preserved even when the ChipKIT is turned off).
 
+## Usage
+
+Connect the ChipKIT USB cable to your computer.
+
+In `src`, do:
+
+```bash
+make
+```
+
+... followed by:
+
+```bash
+make install
+```
+
+If the `Makefile` is unable to find the USB device, you can specify the correct USB serial port like this:
+
+```bash
+make install TTYDEV=/dev/ttyUSB0
+```
+
+- Linux: This is normally `/dev/ttyUSB0`
+- Windows: In MSYS2, this is normally `/dev/ttyS2`
+- Mac: This is normally `/dev/cu.usbserial-*` (replace `*` with something)
+
 ## License
 
 Licensed under the terms of the MIT License. See the [license file](LICENSE).
