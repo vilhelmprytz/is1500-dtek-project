@@ -6,6 +6,14 @@
 
 Licensed under the terms of the MIT License. See the [license file](LICENSE).
 
+The following files:
+
+- `src/Makefile`
+- `src/stubs.c`
+- `src/vector.S`
+
+... are **NOT** covered by the MIT License. The LICENSE for these files is located in [src/COPYING](src/COPYING).
+
 ## Authors
 
 - [Vilhelm Prytz](https://github.com/vilhelmprytz) - vprytz@kth.se / vilhelm@prytznet.se
