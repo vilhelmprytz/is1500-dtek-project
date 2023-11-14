@@ -14,7 +14,7 @@
 
 #include <stdint.h>  /* Declarations of uint_32 and the like */
 #include <pic32mx.h> /* Declarations of system-specific addresses etc */
-#include "mipslab.h" /* Declatations for these labs */
+#include "display.h" /* Declatations for these labs */
 
 void user_isr(void)
 {
@@ -68,10 +68,10 @@ int main(void)
     SPI2CONSET = 0x8000;
 
     display_init();
-    display_string(0, "KTH/ICT lab");
-    display_string(1, "in Computer");
-    display_string(2, "Engineering");
-    display_string(3, "Welcome!");
+
+    display_string(0, "Hello World");
+    display_string(1, "????? ?????");
+
     display_update();
 
     display_image(96, icon);
@@ -80,6 +80,7 @@ int main(void)
 
     while (1)
     {
+
         // labwork(); /* Do lab-specific things again and again */
     }
     return 0;
