@@ -54,7 +54,7 @@ The following files:
 - `src/display.c`
 - `src/display.h`
 - `src/data.c`
-- some parts of `src/tetris.c`
+- some parts of `src/main.c`
 
 ... are **NOT** covered by the MIT License. The LICENSE for these files is located in [src/COPYING](src/COPYING).
 

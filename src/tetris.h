@@ -2,6 +2,6 @@ enum GameState
 {
     MENU,
     GAME,
-    END
+    GAMEOVER
 };
 enum GameState state;
