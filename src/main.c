@@ -74,7 +74,7 @@ int main(void)
     display_init();
 
     // init buttons
-    // buttons_init();
+    btninit();
 
     // keep track of state
     state = MENU;
@@ -82,17 +82,25 @@ int main(void)
     {
         if (state == MENU)
         {
-            menu();
+            menu(&state);
         }
         else if (state == GAME)
         {
-            game();
+            game(&state);
         }
         else if (state == GAMEOVER)
         {
-            gameover();
+            gameover(&state);
         }
-        // labwork(); /* Do lab-specific things again and again */
+        else if (state == HIGHSCORE)
+        {
+            highscore(&state);
+        }
+        else
+        {
+            display_string(0, "fatal error, something broke");
+            display_update();
+        }
     }
     return 0;
 }
