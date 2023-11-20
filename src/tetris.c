@@ -10,6 +10,13 @@
 #include "buttons.h"
 #include "tetris.h"
 
+void delay(int num)
+{
+    int i;
+    for (i = num; i > 0; i--)
+        ;
+}
+
 void menu(enum GameState *state)
 {
     // get status of buttons
@@ -35,10 +42,18 @@ void menu(enum GameState *state)
 
 void game(enum GameState *state)
 {
-    display_string(0, "GAME");
-    display_string(2, "");
-    display_string(3, "");
-    display_update();
+    // just loop over and over again
+    uint8_t pixels[512];
+    int i;
+    for (i = 0; i < 512; i++)
+    {
+        int j;
+        for (j = 0; j < 8; j++)
+            pixels[i] = j;
+        delay(30);
+    }
+
+    display_test(*pixels);
 }
 
 void gameover(enum GameState *state)
@@ -54,3 +69,32 @@ void highscore(enum GameState *state)
     display_string(3, "");
     display_update();
 }
+
+/*
+Implementing falling or movement of blocks
+*/
+
+typedef struct
+{
+    // Position of the block on the board
+    int x, y;
+    Block currentBlock;
+} FallingBlock;
+
+FallingBlock fallingBlock;
+
+/*
+When a block is generated, initialize it at the top of the board
+*/
+
+void generateBlock()
+{
+    // code logic from generating block ...
+    fallingBlock.currentBlock = nextBlock;
+    fallingBlock.x = BOARD_WIDTH... fallingBlock.y = 0; // start at the top of the board
+}
+
+/*
+Initiate the falling
+*/
+void moveBlockAut
