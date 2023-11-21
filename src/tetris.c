@@ -42,18 +42,30 @@ void menu(enum GameState *state)
 
 void game(enum GameState *state)
 {
-    // just loop over and over again
-    uint8_t pixels[512];
-    int i;
-    for (i = 0; i < 512; i++)
+    display_clear();
+
+    // set stuff
+    int col;
+    for (col = 0; col < 128; col++)
     {
-        int j;
-        for (j = 0; j < 8; j++)
-            pixels[i] = j;
-        delay(30);
+        display[0][col] = 1;
+        display[31][col] = 1;
     }
 
-    display_test(*pixels);
+    int row;
+    for (row = 1; row < 31; row++)
+    {
+        display[row][0] = 1;
+        display[row][127] = 1;
+    }
+
+    // try
+    display[4][4] = 1;
+    display[4][5] = 1;
+    display[5][4] = 1;
+    display[5][5] = 1;
+
+    display_change();
 }
 
 void gameover(enum GameState *state)
@@ -74,27 +86,27 @@ void highscore(enum GameState *state)
 Implementing falling or movement of blocks
 */
 
-typedef struct
-{
-    // Position of the block on the board
-    int x, y;
-    Block currentBlock;
-} FallingBlock;
+// typedef struct
+// {
+//     // Position of the block on the board
+//     int x, y;
+//     Block currentBlock;
+// } FallingBlock;
 
-FallingBlock fallingBlock;
+// FallingBlock fallingBlock;
 
-/*
-When a block is generated, initialize it at the top of the board
-*/
+// /*
+// When a block is generated, initialize it at the top of the board
+// */
 
-void generateBlock()
-{
-    // code logic from generating block ...
-    fallingBlock.currentBlock = nextBlock;
-    fallingBlock.x = BOARD_WIDTH... fallingBlock.y = 0; // start at the top of the board
-}
+// void generateBlock()
+// {
+//     // code logic from generating block ...
+//     fallingBlock.currentBlock = nextBlock;
+//     fallingBlock.x = BOARD_WIDTH... fallingBlock.y = 0; // start at the top of the board
+// }
 
-/*
-Initiate the falling
-*/
-void moveBlockAut
+// /*
+// Initiate the falling
+// */
+// void moveBlockAut

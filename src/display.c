@@ -23,6 +23,9 @@ static void num32asc(char *s, int);
 #define DISPLAY_TURN_OFF_VDD (PORTFSET = 0x40)
 #define DISPLAY_TURN_OFF_VBAT (PORTFSET = 0x20)
 
+uint8_t display[32][128];  // human readable pixel position, 2d array
+uint8_t oled_display[512]; // computer readable pixel position and activation
+
 /* quicksleep:
    A simple function to create a small delay.
    Very inefficient use of computing resources,
@@ -174,8 +177,8 @@ void display_image(int x, const uint8_t *data)
 
     DISPLAY_CHANGE_TO_DATA_MODE;
 
-    for (j = 0; j < 32; j++)
-      spi_send_recv(~data[i * 32 + j]);
+    for (j = 0; j < 128; j++)
+      spi_send_recv(data[i * 128 + j]);
   }
 }
 
@@ -298,13 +301,57 @@ char *itoaconv(int num)
   return (&itoa_buffer[i + 1]);
 }
 
-// own stuff
-void display_test(uint8_t *pixels)
+// https://digilent.com/reference/chipkit_shield_basic_io_shield/refmanual#display_memory_update
+
+void display_convert()
 {
-  DISPLAY_CHANGE_TO_DATA_MODE;
-  int i;
-  for (i = 0; i < 512; ++i)
+  // The display memory is organized as four pages of 128 bytes each. Each memory page corresponds to an 8-pixel-high stripe across the display.
+  // Each byte in the memory page corresponds to an 8-pixel-high column on the display.
+  int page, row, column;
+  uint8_t powerOfTwo = 1;
+  uint8_t oledNumber = 0;
+
+  for (page = 0; page < 4; page++)
   {
-    spi_send_recv(pixels[i]);
+    for (column = 0; column < 128; column++)
+    {
+      powerOfTwo = 1;
+      oledNumber = 0;
+
+      for (row = 0; row < 8; row++)
+      {
+        if (display[8 * page + row][column])
+        {
+          oledNumber |= powerOfTwo;
+        }
+        powerOfTwo <<= 1;
+      }
+      oled_display[column + page * 128] = oledNumber;
+    }
   }
+}
+
+void display_clear()
+{
+  int row, column, i;
+
+  for (row = 0; row < 32; row++)
+  {
+    for (column = 0; column < 128; column++)
+    {
+      display[row][column] = 0;
+    }
+  }
+  for (i = 0; i < 512; i++)
+  {
+    oled_display[i] = 0;
+  }
+}
+
+// own stuff
+/*This function calls all the necessary functions for the game to start*/
+void display_change()
+{
+  display_convert();
+  display_image(0, oled_display);
 }

@@ -52,3 +52,6 @@ void time2string(char *, int);
 int getbtns(void);
 int getsw(void);
 void enable_interrupt(void);
+
+// display
+extern uint8_t display[32][128];
