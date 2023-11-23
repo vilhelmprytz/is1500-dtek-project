@@ -83,7 +83,14 @@ bool check_will_be_out_of_bounds(int x, int y, enum Direction direction)
     // if (direction == LEFT)
     if (direction == LEFT)
     {
-        if (display[y + BLOCK_SIZE][x + BLOCK_SIZE] == 1)
+        // top, to the left
+        if (display[y + BLOCK_SIZE][x] == 1)
+        {
+            return false;
+        }
+
+        // bottom, to the left
+        if (display[y + BLOCK_SIZE][x + BLOCK_SIZE - 1] == 1)
         {
             return false;
         }
