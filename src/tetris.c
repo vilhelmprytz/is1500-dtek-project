@@ -40,13 +40,18 @@ void menu(enum GameState *state)
     display_update();
 }
 
+// 2d array to keep track of blocks
+int x, y;
+x = 6;
+y = 6;
+
 void game(enum GameState *state)
 {
     display_clear();
 
     // set stuff
     int col;
-    for (col = 0; col < 128; col++)
+    for (col = 0; col < 62; col++)
     {
         display[0][col] = 1;
         display[31][col] = 1;
@@ -56,14 +61,25 @@ void game(enum GameState *state)
     for (row = 1; row < 31; row++)
     {
         display[row][0] = 1;
-        display[row][127] = 1;
+        display[row][61] = 1;
+    }
+
+    // tetris is 20x10 blocks
+    // one block is 3x3 pixels
+
+    x = x + 1;
+
+    int loop;
+    for (loop = 0; loop < 3; loop++)
+    {
+        int innerloop;
+        for (innerloop = 0; innerloop < 3; innerloop++)
+        {
+            display[y + loop][x + innerloop] = 1;
+        }
     }
 
     // try
-    display[4][4] = 1;
-    display[4][5] = 1;
-    display[5][4] = 1;
-    display[5][5] = 1;
 
     display_change();
 }
