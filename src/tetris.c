@@ -6,9 +6,14 @@
 */
 
 #include <stdint.h>
+#include <stdbool.h>
 #include "display.h"
 #include "buttons.h"
 #include "tetris.h"
+
+#define GAME_HEIGHT 60
+#define GAME_WIDTH 30
+#define BLOCK_SIZE 3
 
 void delay(int num)
 {
@@ -40,14 +45,63 @@ void menu(enum GameState *state)
     display_update();
 }
 
+void draw_block(int x, int y, int oledstate)
+{
+    int loop;
+    for (loop = 0; loop < 3; loop++)
+    {
+        int innerloop;
+        for (innerloop = 0; innerloop < 3; innerloop++)
+        {
+            display[y + loop][x + innerloop] = oledstate;
+        }
+    }
+}
+
 // 2d array to keep track of blocks
 int x, y;
-x = 6;
-y = 6;
+x = 1;
+y = 4;
+
+bool check_will_be_out_of_bounds(int x, int y, enum Direction direction)
+{
+    // if (direction == DOWN)
+    if (direction == DOWN)
+    {
+        if (display[y][x + BLOCK_SIZE] == 1)
+        {
+            return false;
+        }
+    }
+
+    // if (direction == LEFT)
+    if (direction == LEFT)
+    {
+        if (display[y + BLOCK_SIZE][x + BLOCK_SIZE] == 1)
+        {
+            return false;
+        }
+    }
+
+    // if (direction == RIGHT)
+    if (direction == RIGHT)
+    {
+        if (display[y - 1][x + BLOCK_SIZE] == 1)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 void game(enum GameState *state)
 {
-    display_clear();
+    // display_clear();
+    delay(900000);
+
+    // get status of buttons
+    int btn = getbtns();
 
     // set stuff
     int col;
@@ -66,22 +120,44 @@ void game(enum GameState *state)
 
     // tetris is 20x10 blocks
     // one block is 3x3 pixels
-
-    x = x + 1;
-
-    int loop;
-    for (loop = 0; loop < 3; loop++)
+    if (check_will_be_out_of_bounds(x, y, DOWN) == false)
     {
-        int innerloop;
-        for (innerloop = 0; innerloop < 3; innerloop++)
-        {
-            display[y + loop][x + innerloop] = 1;
-        }
+        // draw it
+        draw_block(x, y, 1);
+
+        // new block
+        x = 1;
+        y = 4;
+    }
+    if (check_will_be_out_of_bounds(x, y, DOWN) != false)
+    {
+        x = x + 1;
     }
 
     // try
+    // BTN4 check
+    if (btn >> 2 == 1)
+    {
+        if (check_will_be_out_of_bounds(x, y, LEFT) != false)
+        {
+            y = y + 1;
+        }
+    }
+
+    // BTN3 check
+    if (((btn >> 1) & 0x00000001) == 1)
+    {
+        if (check_will_be_out_of_bounds(x, y, RIGHT) != false)
+        {
+            y = y - 1;
+        }
+    }
+
+    draw_block(x, y, 1);
 
     display_change();
+
+    draw_block(x, y, 0);
 }
 
 void gameover(enum GameState *state)

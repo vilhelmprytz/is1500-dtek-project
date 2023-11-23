@@ -12,3 +12,10 @@ enum GameState
     HIGHSCORE,
 };
 enum GameState state;
+
+enum Direction
+{
+    LEFT,
+    RIGHT,
+    DOWN,
+};
