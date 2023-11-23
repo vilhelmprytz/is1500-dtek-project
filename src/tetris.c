@@ -99,7 +99,13 @@ bool check_will_be_out_of_bounds(int x, int y, enum Direction direction)
     // if (direction == RIGHT)
     if (direction == RIGHT)
     {
-        if (display[y - 1][x + BLOCK_SIZE] == 1)
+        // top, to the right
+        if (display[y - 1][x] == 1)
+        {
+            return false;
+        }
+        // bottom, to the right
+        if (display[y - 1][x + BLOCK_SIZE - 1] == 1)
         {
             return false;
         }
@@ -115,6 +121,12 @@ void game(enum GameState *state)
 
     // get status of buttons
     int btn = getbtns();
+
+    // BTN2 reset
+    if (((btn) & 0x00000001) == 1)
+    {
+        display_clear();
+    }
 
     // draw boundaries
     int col;
@@ -133,10 +145,13 @@ void game(enum GameState *state)
 
     // tetris is 20x10 blocks
     // one block is 3x3 pixels
+
+    // now collision
     if (check_will_be_out_of_bounds(x, y, DOWN) == false)
     {
+        // check closest whole block
         // draw it
-        draw_block(x, y, 1);
+        draw_block(x, (y + BLOCK_SIZE / 2) / BLOCK_SIZE, 1);
 
         // new block
         x = 1;
