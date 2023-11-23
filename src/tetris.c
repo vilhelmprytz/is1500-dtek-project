@@ -11,9 +11,9 @@
 #include "buttons.h"
 #include "tetris.h"
 
-#define GAME_HEIGHT 60
+#define GAME_HEIGHT 100
 #define GAME_WIDTH 30
-#define BLOCK_SIZE 3
+#define BLOCK_SIZE 5
 
 void delay(int num)
 {
@@ -48,10 +48,10 @@ void menu(enum GameState *state)
 void draw_block(int x, int y, int oledstate)
 {
     int loop;
-    for (loop = 0; loop < 3; loop++)
+    for (loop = 0; loop < BLOCK_SIZE; loop++)
     {
         int innerloop;
-        for (innerloop = 0; innerloop < 3; innerloop++)
+        for (innerloop = 0; innerloop < BLOCK_SIZE; innerloop++)
         {
             display[y + loop][x + innerloop] = oledstate;
         }
@@ -68,7 +68,13 @@ bool check_will_be_out_of_bounds(int x, int y, enum Direction direction)
     // if (direction == DOWN)
     if (direction == DOWN)
     {
+        // directly under
         if (display[y][x + BLOCK_SIZE] == 1)
+        {
+            return false;
+        }
+        // to the left
+        if (display[y + BLOCK_SIZE - 1][x + BLOCK_SIZE] == 1)
         {
             return false;
         }
@@ -98,24 +104,24 @@ bool check_will_be_out_of_bounds(int x, int y, enum Direction direction)
 void game(enum GameState *state)
 {
     // display_clear();
-    delay(900000);
+    delay(100000);
 
     // get status of buttons
     int btn = getbtns();
 
-    // set stuff
+    // draw boundaries
     int col;
-    for (col = 0; col < 62; col++)
+    for (col = 0; col < GAME_HEIGHT + 2; col++)
     {
         display[0][col] = 1;
-        display[31][col] = 1;
+        display[GAME_WIDTH + 1][col] = 1;
     }
 
     int row;
-    for (row = 1; row < 31; row++)
+    for (row = 1; row < GAME_WIDTH + 1; row++)
     {
         display[row][0] = 1;
-        display[row][61] = 1;
+        display[row][GAME_HEIGHT + 1] = 1;
     }
 
     // tetris is 20x10 blocks
@@ -177,28 +183,3 @@ void highscore(enum GameState *state)
 /*
 Implementing falling or movement of blocks
 */
-
-// typedef struct
-// {
-//     // Position of the block on the board
-//     int x, y;
-//     Block currentBlock;
-// } FallingBlock;
-
-// FallingBlock fallingBlock;
-
-// /*
-// When a block is generated, initialize it at the top of the board
-// */
-
-// void generateBlock()
-// {
-//     // code logic from generating block ...
-//     fallingBlock.currentBlock = nextBlock;
-//     fallingBlock.x = BOARD_WIDTH... fallingBlock.y = 0; // start at the top of the board
-// }
-
-// /*
-// Initiate the falling
-// */
-// void moveBlockAut
