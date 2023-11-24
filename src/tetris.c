@@ -61,7 +61,7 @@ void draw_block(int x, int y, int oledstate)
 // 2d array to keep track of blocks
 int x, y;
 x = 1;
-y = 4;
+y = 1;
 
 bool check_will_be_out_of_bounds(int x, int y, enum Direction direction)
 {
@@ -151,11 +151,11 @@ void game(enum GameState *state)
     {
         // check closest whole block
         // draw it
-        draw_block(x, (y + BLOCK_SIZE / 2) / BLOCK_SIZE, 1);
+        draw_block(x, y, 1);
 
         // new block
         x = 1;
-        y = 4;
+        y = 1;
     }
     if (check_will_be_out_of_bounds(x, y, DOWN) != false)
     {
@@ -168,7 +168,7 @@ void game(enum GameState *state)
     {
         if (check_will_be_out_of_bounds(x, y, LEFT) != false)
         {
-            y = y + 1;
+            y = y + BLOCK_SIZE;
         }
     }
 
@@ -177,7 +177,7 @@ void game(enum GameState *state)
     {
         if (check_will_be_out_of_bounds(x, y, RIGHT) != false)
         {
-            y = y - 1;
+            y = y - BLOCK_SIZE;
         }
     }
 
