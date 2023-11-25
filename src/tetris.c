@@ -58,6 +58,52 @@ void draw_block(int x, int y, int oledstate)
     }
 }
 
+void check_full_rows()
+{
+    // check if row is full
+    int row;
+    for (row = 1; row < GAME_HEIGHT + 1; row++)
+    {
+        // check all pixels in this row
+        int pix;
+        bool row_full = true;
+
+        for (pix = 1; pix < GAME_WIDTH + 1; pix++)
+        {
+            if (display[pix][row] == 0)
+            {
+                row_full = false;
+                break;
+            }
+        }
+
+        // if row is full, remove row
+        if (row_full == true)
+        {
+            // remove row
+            int pix;
+            for (pix = 1; pix < GAME_WIDTH + 1; pix++)
+            {
+                display[pix][row] = 0;
+            }
+        }
+
+        // if row is removed, move all rows above down
+        if (row_full == true)
+        {
+            int row_above;
+            for (row_above = row; row_above > 1; row_above--)
+            {
+                int pix;
+                for (pix = 1; pix < GAME_WIDTH + 1; pix++)
+                {
+                    display[pix][row_above] = display[pix][row_above - 1];
+                }
+            }
+        }
+    }
+}
+
 // 2d array to keep track of blocks
 int x, y;
 x = 1;
@@ -152,6 +198,9 @@ void game(enum GameState *state)
         // check closest whole block
         // draw it
         draw_block(x, y, 1);
+
+        // now clear rows
+        check_full_rows();
 
         // new block
         x = 1;
