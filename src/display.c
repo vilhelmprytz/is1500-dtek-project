@@ -305,6 +305,8 @@ char *itoaconv(int num)
 
 void display_convert()
 {
+  // display[y][x] when the screen is "laying down"
+
   // The display memory is organized as four pages of 128 bytes each. Each memory page corresponds to an 8-pixel-high stripe across the display.
   // Each byte in the memory page corresponds to an 8-pixel-high column on the display.
   int page, row, column;
