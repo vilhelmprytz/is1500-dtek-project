@@ -14,6 +14,7 @@
 #define GAME_HEIGHT 100
 #define GAME_WIDTH 30
 #define BLOCK_SIZE 5
+#define MAX_HIGH_SCORES 5 // maybe less for high score
 
 void delay(int num)
 {
@@ -244,18 +245,6 @@ void gameover(enum GameState *state)
 }
 
 /*
-Display high score
-*/
-
-void highscore(enum GameState *state)
-{
-    display_string(0, "Highscore List");
-    display_string(2, "");
-    display_string(3, "");
-    display_update();
-}
-
-/*
 High score structure
 */
 
@@ -268,7 +257,6 @@ typedef struct {
 Global high score array
 */
 
-#define MAX_HIGH_SCORES 5 // or any number you prefer
 HighScore highScores[MAX_HIGH_SCORES];
 
 /*
@@ -298,3 +286,21 @@ void updateHighScore(int newScore) {
         }
     }
 }
+
+/*
+Display high score
+*/
+
+void highscore(enum GameState *state)
+{
+    display_string(0, "Highscore List");
+    char scoreLine[32];
+
+    for (int i = 0; i < MAX_HIGH_SCORES; i++) {
+        sprintf(scoreLine, "%d. Score: %d", i + 1, highScores[i].score);
+        display_string(i + 1, scoreLine); // Adjust the line number as needed
+    }
+
+    display_update();
+}
+
