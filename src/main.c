@@ -21,7 +21,44 @@ enum GameState state;
 
 void user_isr(void)
 {
-    return;
+    // Acknowledge the Timer 2 interrupt by clearing the interrupt flag
+    IFSCLR(0) = 0x00000100;
+}
+
+void timerinit(void)
+{
+    // TCS = 0, internal peripheral clock
+    // T32 = 0, 16-bit timer
+    // TCKPS = 7, 1:256 prescaling (TCKPS)
+    // TGATE = 0, gated time accumulation disabled
+    // SDL = 0, continue operation when device enters idle mode
+    // ON = 1, module is enabled
+    T2CON = (T2CON & 0xFFFF0000) | 0x00008070;
+
+    // Clear the timer register
+    TMR2 = 0x0;
+
+    // Load the period register
+    // Assuming 80 MHz
+    // 80 000 000 / 256 = 312 500 (1 second is 312 500 in timer)
+    // 10 timeout per second, 100 ms => 312 500 / 10 = 31 250
+    PR2 = 0x7A12; // 31 250
+
+    // Set priority level = 3,
+    // then subpriority level = 1
+    IPCSET(2) = 0x0000000C;
+    IPCSET(2) = 0x00000001;
+
+    // Clear the timer interrupt status flag
+    IFSCLR(0) = 0x00000100;
+
+    // Enable timer interrupts
+    IECSET(0) = 0x00000100;
+
+    // Start the timer
+    T2CONSET = 0x8000;
+
+    enable_interrupt();
 }
 
 int main(void)
@@ -75,6 +112,9 @@ int main(void)
 
     // init buttons
     btninit();
+
+    // init timer interrupt
+    timerinit();
 
     // keep track of state
     state = MENU;
