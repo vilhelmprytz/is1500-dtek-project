@@ -243,6 +243,10 @@ void gameover(enum GameState *state)
     display_update();
 }
 
+/*
+Display high score
+*/
+
 void highscore(enum GameState *state)
 {
     display_string(0, "Highscore List");
@@ -252,5 +256,45 @@ void highscore(enum GameState *state)
 }
 
 /*
-Implementing falling or movement of blocks
+High score structure
 */
+
+typedef struct {
+    int score;
+    // Add more fields if needed (e.g., player name, date)
+} HighScore;
+
+/*
+Global high score array
+*/
+
+#define MAX_HIGH_SCORES 5 // or any number you prefer
+HighScore highScores[MAX_HIGH_SCORES];
+
+/*
+Initialize high scores 
+*/
+
+void initializeHighScores() {
+    for (int i = 0; i < MAX_HIGH_SCORES; i++) {
+        highScores[i].score = 0; // Initialize to zero or any default value
+    }
+}
+
+/*
+Updating high scores
+*/
+
+void updateHighScore(int newScore) {
+    for (int i = 0; i < MAX_HIGH_SCORES; i++) {
+        if (newScore > highScores[i].score) {
+            // Shift lower scores down
+            for (int j = MAX_HIGH_SCORES - 1; j > i; j--) {
+                highScores[j] = highScores[j - 1];
+            }
+            // Insert new high score
+            highScores[i].score = newScore;
+            break;
+        }
+    }
+}
