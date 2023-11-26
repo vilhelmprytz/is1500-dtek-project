@@ -21,6 +21,11 @@ enum GameState state;
 
 void user_isr(void)
 {
+    if (state == GAME)
+    {
+        tetris_game_isr();
+    }
+
     // Acknowledge the Timer 2 interrupt by clearing the interrupt flag
     IFSCLR(0) = 0x00000100;
 }
