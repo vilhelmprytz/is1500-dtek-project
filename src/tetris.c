@@ -17,6 +17,7 @@
 #define MAX_HIGH_SCORES 5 // maybe less for high score
 
 int current_score;
+int btn;
 
 void delay(int num)
 {
@@ -174,6 +175,33 @@ bool test = false;
 
 void tetris_game_isr(void)
 {
+    // BTN2 reset
+    if (((btn) & 0x00000001) == 1)
+    {
+        display_clear();
+    }
+
+    // try
+    // BTN4 check
+    if (btn >> 2 == 1)
+    {
+        if (check_will_be_out_of_bounds(x, y, LEFT) != false)
+        {
+            draw_block(x, y, 0);
+            y = y + BLOCK_SIZE;
+        }
+    }
+
+    // BTN3 check
+    if (((btn >> 1) & 0x00000001) == 1)
+    {
+        if (check_will_be_out_of_bounds(x, y, RIGHT) != false)
+        {
+            draw_block(x, y, 0);
+            y = y - BLOCK_SIZE;
+        }
+    }
+
     if (test == true)
     {
         test = false;
@@ -188,17 +216,11 @@ void tetris_game_isr(void)
 
 void game(enum GameState *state)
 {
+    // get status of buttons
+    btn = getbtns();
+
     // display_clear();
     delay(100000);
-
-    // get status of buttons
-    int btn = getbtns();
-
-    // BTN2 reset
-    if (((btn) & 0x00000001) == 1)
-    {
-        display_clear();
-    }
 
     // draw boundaries
     int col;
@@ -234,26 +256,8 @@ void game(enum GameState *state)
     }
     if (check_will_be_out_of_bounds(x, y, DOWN) != false)
     {
+        draw_block(x, y, 0);
         x = x + 1;
-    }
-
-    // try
-    // BTN4 check
-    if (btn >> 2 == 1)
-    {
-        if (check_will_be_out_of_bounds(x, y, LEFT) != false)
-        {
-            y = y + BLOCK_SIZE;
-        }
-    }
-
-    // BTN3 check
-    if (((btn >> 1) & 0x00000001) == 1)
-    {
-        if (check_will_be_out_of_bounds(x, y, RIGHT) != false)
-        {
-            y = y - BLOCK_SIZE;
-        }
     }
 
     draw_block(x, y, 1);
