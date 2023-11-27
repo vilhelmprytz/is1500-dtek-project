@@ -195,46 +195,12 @@ void tetris_game_isr(void)
     // BTN3 check
     if (((btn >> 1) & 0x00000001) == 1)
     {
+
         if (check_will_be_out_of_bounds(x, y, RIGHT) != false)
         {
             draw_block(x, y, 0);
             y = y - BLOCK_SIZE;
         }
-    }
-
-    if (test == true)
-    {
-        test = false;
-        draw_block(110, 10, 1);
-    }
-    else
-    {
-        test = true;
-        draw_block(110, 10, 0);
-    }
-}
-
-void game(enum GameState *state)
-{
-    // get status of buttons
-    btn = getbtns();
-
-    // display_clear();
-    delay(100000);
-
-    // draw boundaries
-    int col;
-    for (col = 0; col < GAME_HEIGHT + 2; col++)
-    {
-        display[0][col] = 1;
-        display[GAME_WIDTH + 1][col] = 1;
-    }
-
-    int row;
-    for (row = 1; row < GAME_WIDTH + 1; row++)
-    {
-        display[row][0] = 1;
-        display[row][GAME_HEIGHT + 1] = 1;
     }
 
     // tetris is 20x10 blocks
@@ -254,10 +220,43 @@ void game(enum GameState *state)
         x = 1;
         y = 1;
     }
+
+    if (test == true)
+    {
+        test = false;
+        draw_block(110, 10, 1);
+    }
+    else
+    {
+        test = true;
+        draw_block(110, 10, 0);
+    }
+}
+
+void game(enum GameState *state)
+{
+    // get status of buttons
+    btn = getbtns();
+
     if (check_will_be_out_of_bounds(x, y, DOWN) != false)
     {
         draw_block(x, y, 0);
         x = x + 1;
+    }
+
+    // draw boundaries
+    int col;
+    for (col = 0; col < GAME_HEIGHT + 2; col++)
+    {
+        display[0][col] = 1;
+        display[GAME_WIDTH + 1][col] = 1;
+    }
+
+    int row;
+    for (row = 1; row < GAME_WIDTH + 1; row++)
+    {
+        display[row][0] = 1;
+        display[row][GAME_HEIGHT + 1] = 1;
     }
 
     draw_block(x, y, 1);
