@@ -171,8 +171,6 @@ bool check_will_be_out_of_bounds(int x, int y, enum Direction direction)
     return true;
 }
 
-bool test = false;
-
 void tetris_game_isr(void)
 {
     // BTN2 reset
@@ -219,17 +217,6 @@ void tetris_game_isr(void)
         // new block
         x = 1;
         y = 1;
-    }
-
-    if (test == true)
-    {
-        test = false;
-        draw_block(110, 10, 1);
-    }
-    else
-    {
-        test = true;
-        draw_block(110, 10, 0);
     }
 }
 
