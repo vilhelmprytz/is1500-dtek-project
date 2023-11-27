@@ -28,6 +28,8 @@ void user_isr(void)
         // BTN4 check
         if (btn >> 2 == 1)
         {
+            currentBlock.x = 1;
+            currentBlock.y = 1;
             state = GAME;
         }
 

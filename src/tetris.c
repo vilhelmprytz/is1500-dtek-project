@@ -101,11 +101,6 @@ void check_full_rows()
     }
 }
 
-// 2d array to keep track of blocks
-int x, y;
-x = 1;
-y = 1;
-
 bool check_will_be_out_of_bounds(int x, int y, enum Direction direction)
 {
     // if (direction == DOWN)
@@ -169,10 +164,10 @@ void tetris_game_isr(void)
     // BTN4 check
     if (btn >> 2 == 1)
     {
-        if (check_will_be_out_of_bounds(x, y, LEFT) != false)
+        if (check_will_be_out_of_bounds(currentBlock.y, currentBlock.y, LEFT) != false)
         {
-            draw_block(x, y, 0);
-            y = y + BLOCK_SIZE;
+            draw_block(currentBlock.x, currentBlock.y, 0);
+            currentBlock.y = currentBlock.y + BLOCK_SIZE;
         }
     }
 
@@ -180,10 +175,10 @@ void tetris_game_isr(void)
     if (((btn >> 1) & 0x00000001) == 1)
     {
 
-        if (check_will_be_out_of_bounds(x, y, RIGHT) != false)
+        if (check_will_be_out_of_bounds(currentBlock.x, currentBlock.y, RIGHT) != false)
         {
-            draw_block(x, y, 0);
-            y = y - BLOCK_SIZE;
+            draw_block(currentBlock.x, currentBlock.y, 0);
+            currentBlock.y = currentBlock.y - BLOCK_SIZE;
         }
     }
 
@@ -191,21 +186,21 @@ void tetris_game_isr(void)
     // one block is 3x3 pixels
 
     // now collision
-    if (check_will_be_out_of_bounds(x, y, DOWN) == false)
+    if (check_will_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN) == false)
     {
         // check closest whole block
         // draw it
-        draw_block(x, y, 1);
+        draw_block(currentBlock.x, currentBlock.y, 1);
 
         // now clear rows
         check_full_rows();
 
         // new block
-        x = 1;
-        y = 1;
+        currentBlock.x = 1;
+        currentBlock.y = 1;
 
         // check also if new block is stuck
-        if (check_will_be_out_of_bounds(x, y, DOWN) == false)
+        if (check_will_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN) == false)
         {
             // game over
             state = GAMEOVER;
@@ -218,10 +213,12 @@ void game(enum GameState *state)
     // get status of buttons
     btn = getbtns();
 
-    if (check_will_be_out_of_bounds(x, y, DOWN) != false)
+    delay(100000);
+
+    if (check_will_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN) != false)
     {
-        draw_block(x, y, 0);
-        x = x + 1;
+        draw_block(currentBlock.x, currentBlock.y, 0);
+        currentBlock.x = currentBlock.x + 1;
     }
 
     // draw boundaries
@@ -239,11 +236,11 @@ void game(enum GameState *state)
         display[row][GAME_HEIGHT + 1] = 1;
     }
 
-    draw_block(x, y, 1);
+    draw_block(currentBlock.x, currentBlock.y, 1);
 
     display_change();
 
-    draw_block(x, y, 0);
+    draw_block(currentBlock.x, currentBlock.y, 0);
 }
 
 void gameover(enum GameState *state)

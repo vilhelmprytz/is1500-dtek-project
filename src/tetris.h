@@ -54,5 +54,7 @@ typedef struct
 {
     int x;
     int y;
-    Shape shape;
+    enum Shape shape;
 } Block;
+
+Block currentBlock;
