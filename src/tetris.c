@@ -179,6 +179,7 @@ void tetris_game_isr(void)
 void game(enum GameState *state)
 {
     // display_clear();
+    delay(100000);
 
     // get status of buttons
     int btn = getbtns();
