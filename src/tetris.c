@@ -248,7 +248,8 @@ void gameover(enum GameState *state)
 High score structure
 */
 
-typedef struct {
+typedef struct
+{
     int score;
     // Add more fields if needed (e.g., player name, date)
 } HighScore;
@@ -260,11 +261,14 @@ Global high score array
 HighScore highScores[MAX_HIGH_SCORES];
 
 /*
-Initialize high scores 
+Initialize high scores
 */
 
-void initializeHighScores() {
-    for (int i = 0; i < MAX_HIGH_SCORES; i++) {
+void initializeHighScores()
+{
+    int i;
+    for (i = 0; i < MAX_HIGH_SCORES; i++)
+    {
         highScores[i].score = 0; // Initialize to zero or any default value
     }
 }
@@ -273,11 +277,17 @@ void initializeHighScores() {
 Updating high scores
 */
 
-void updateHighScore(int newScore) {
-    for (int i = 0; i < MAX_HIGH_SCORES; i++) {
-        if (newScore > highScores[i].score) {
+void updateHighScore(int newScore)
+{
+    int i;
+    for (i = 0; i < MAX_HIGH_SCORES; i++)
+    {
+        if (newScore > highScores[i].score)
+        {
             // Shift lower scores down
-            for (int j = MAX_HIGH_SCORES - 1; j > i; j--) {
+            int j;
+            for (j = MAX_HIGH_SCORES - 1; j > i; j--)
+            {
                 highScores[j] = highScores[j - 1];
             }
             // Insert new high score
@@ -296,11 +306,12 @@ void highscore(enum GameState *state)
     display_string(0, "Highscore List");
     char scoreLine[32];
 
-    for (int i = 0; i < MAX_HIGH_SCORES; i++) {
-        sprintf(scoreLine, "%d. Score: %d", i + 1, highScores[i].score);
+    int i;
+    for (i = 0; i < MAX_HIGH_SCORES; i++)
+    {
+        // sprintf(scoreLine, "%d. Score: %d", i + 1, highScores[i].score);
         display_string(i + 1, scoreLine); // Adjust the line number as needed
     }
 
     display_update();
 }
-
