@@ -19,11 +19,38 @@
 
 enum GameState state;
 
+int btn;
+
 void user_isr(void)
 {
+    if (state == MENU)
+    {
+        // BTN4 check
+        if (btn >> 2 == 1)
+        {
+            state = GAME;
+        }
+
+        // BTN3 check
+        if (((btn >> 1) & 0x00000001) == 1)
+        {
+            state = HIGHSCORE;
+        }
+    }
+
     if (state == GAME)
     {
         tetris_game_isr();
+    }
+
+    if (state == GAMEOVER || state == HIGHSCORE)
+    {
+        // BTN4 check
+        if (btn >> 2 == 1)
+        {
+            display_clear();
+            state = MENU;
+        }
     }
 
     // Acknowledge the Timer 2 interrupt by clearing the interrupt flag
@@ -125,6 +152,8 @@ int main(void)
     state = MENU;
     while (1)
     {
+        btn = getbtns();
+
         if (state == MENU)
         {
             menu(&state);

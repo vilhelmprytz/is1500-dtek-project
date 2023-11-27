@@ -28,22 +28,8 @@ void delay(int num)
 
 void menu(enum GameState *state)
 {
-    // get status of buttons
-    int btn = getbtns();
-
-    // BTN4 check
-    if (btn >> 2 == 1)
-    {
-        *state = GAME;
-    }
-
-    // BTN3 check
-    if (((btn >> 1) & 0x00000001) == 1)
-    {
-        *state = HIGHSCORE;
-    }
-
     display_string(0, "TETRIS");
+    display_string(1, "");
     display_string(2, "BTN3 - Highscores");
     display_string(3, "BTN4 - Start");
     display_update();
@@ -217,6 +203,13 @@ void tetris_game_isr(void)
         // new block
         x = 1;
         y = 1;
+
+        // check also if new block is stuck
+        if (check_will_be_out_of_bounds(x, y, DOWN) == false)
+        {
+            // game over
+            state = GAMEOVER;
+        }
     }
 }
 
@@ -256,6 +249,9 @@ void game(enum GameState *state)
 void gameover(enum GameState *state)
 {
     display_string(0, "GAME OVER");
+    display_string(1, itoaconv(current_score));
+    display_string(2, "Press BTN4 for");
+    display_string(3, "menu");
     display_update();
 }
 
