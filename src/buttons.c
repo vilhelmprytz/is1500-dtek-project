@@ -11,7 +11,7 @@ void btninit(void)
 int getbtns(void)
 {
     volatile uint32_t *PORTD_ptr = PORTD;
-    volatile uint32_t *PORTF_ptr = PORTF
+    volatile uint32_t *PORTF_ptr = PORTF;
 
 // Read the status of buttons BTN4, BTN3, BTN2 (bits 7-5 of Port D)
     int buttonsD = (*PORTD_ptr >> 5) & 0x00000007;
