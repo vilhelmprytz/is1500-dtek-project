@@ -160,6 +160,22 @@ bool check_will_be_out_of_bounds(int x, int y, enum Direction direction)
     return true;
 }
 
+bool test = false;
+
+void tetris_game_isr(void)
+{
+    if (test == true)
+    {
+        test = false;
+        draw_block(110, 10, 1);
+    }
+    else
+    {
+        test = true;
+        draw_block(110, 10, 0);
+    }
+}
+
 void game(enum GameState *state)
 {
     // display_clear();
