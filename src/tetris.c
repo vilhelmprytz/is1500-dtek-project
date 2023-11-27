@@ -16,6 +16,8 @@
 #define BLOCK_SIZE 5
 #define MAX_HIGH_SCORES 5 // maybe less for high score
 
+int current_score;
+
 void delay(int num)
 {
     int i;
@@ -101,6 +103,13 @@ void check_full_rows()
                     display[pix][row_above] = display[pix][row_above - 1];
                 }
             }
+        }
+
+        // if row is full, increment score
+        if (row_full == true)
+        {
+            current_score++;
+            display[1 + current_score][120] = 1;
         }
     }
 }
