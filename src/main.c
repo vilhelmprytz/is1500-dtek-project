@@ -30,6 +30,9 @@ void user_isr(void)
         {
             currentBlock.x = 1;
             currentBlock.y = 1;
+            currentBlock.shape = I;
+            currentBlock.rotation = UP;
+
             state = GAME;
         }
 

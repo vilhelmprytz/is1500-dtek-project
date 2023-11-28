@@ -1,8 +1,4 @@
-/*
-Define block structures and game board
-*/
-#define BOARD_WIDTH ...
-#define BOARD_HEIGHT ...
+
 
 enum GameState
 {
@@ -18,6 +14,7 @@ enum Direction
     LEFT,
     RIGHT,
     DOWN,
+    UP
 };
 
 enum Shape
@@ -55,6 +52,7 @@ typedef struct
     int x;
     int y;
     enum Shape shape;
+    enum Direction rotation;
 } Block;
 
 Block currentBlock;

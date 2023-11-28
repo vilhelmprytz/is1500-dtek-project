@@ -11,9 +11,9 @@
 #include "buttons.h"
 #include "tetris.h"
 
-#define GAME_HEIGHT 100
+#define GAME_HEIGHT 60
 #define GAME_WIDTH 30
-#define BLOCK_SIZE 5
+#define BLOCK_SIZE 3
 #define MAX_HIGH_SCORES 5 // maybe less for high score
 
 int current_score;
@@ -54,8 +54,23 @@ void draw_shape(int x, int y, int oledstate)
     {
     // I
     case I:
-        draw_block(x, y, oledstate);
-        draw_block(x + BLOCK_SIZE, y, oledstate);
+        switch (currentBlock.rotation)
+        {
+        case UP:
+        case DOWN:
+            draw_block(x, y, oledstate);
+            draw_block(x + BLOCK_SIZE, y, oledstate);
+            draw_block(x + BLOCK_SIZE * 2, y, oledstate);
+            draw_block(x + BLOCK_SIZE * 3, y, oledstate);
+            return;
+        case LEFT:
+        case RIGHT:
+            draw_block(x, y, oledstate);
+            draw_block(x, y + BLOCK_SIZE, oledstate);
+            draw_block(x, y + BLOCK_SIZE * 2, oledstate);
+            draw_block(x, y + BLOCK_SIZE * 3, oledstate);
+            return;
+        }
 
         return;
     }
@@ -167,10 +182,10 @@ bool check_will_be_out_of_bounds(int x, int y, enum Direction direction)
 
 void tetris_game_isr(void)
 {
-    // BTN2 reset
+    // BTN2, rotation
     if (((btn) & 0x00000001) == 1)
     {
-        display_clear();
+        currentBlock.rotation = (currentBlock.rotation + 1) % 4;
     }
 
     // try
@@ -179,7 +194,7 @@ void tetris_game_isr(void)
     {
         if (check_will_be_out_of_bounds(currentBlock.y, currentBlock.y, LEFT) != false)
         {
-            draw_block(currentBlock.x, currentBlock.y, 0);
+            draw_shape(currentBlock.x, currentBlock.y, 0);
             currentBlock.y = currentBlock.y + BLOCK_SIZE;
         }
     }
@@ -190,7 +205,7 @@ void tetris_game_isr(void)
 
         if (check_will_be_out_of_bounds(currentBlock.x, currentBlock.y, RIGHT) != false)
         {
-            draw_block(currentBlock.x, currentBlock.y, 0);
+            draw_shape(currentBlock.x, currentBlock.y, 0);
             currentBlock.y = currentBlock.y - BLOCK_SIZE;
         }
     }
@@ -203,7 +218,7 @@ void tetris_game_isr(void)
     {
         // check closest whole block
         // draw it
-        draw_block(currentBlock.x, currentBlock.y, 1);
+        draw_shape(currentBlock.x, currentBlock.y, 1);
 
         // now clear rows
         check_full_rows();
@@ -230,7 +245,7 @@ void game(enum GameState *state)
 
     if (check_will_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN) != false)
     {
-        draw_block(currentBlock.x, currentBlock.y, 0);
+        draw_shape(currentBlock.x, currentBlock.y, 0);
         currentBlock.x = currentBlock.x + 1;
     }
 
@@ -249,11 +264,11 @@ void game(enum GameState *state)
         display[row][GAME_HEIGHT + 1] = 1;
     }
 
-    draw_block(currentBlock.x, currentBlock.y, 1);
+    draw_shape(currentBlock.x, currentBlock.y, 1);
 
     display_change();
 
-    draw_block(currentBlock.x, currentBlock.y, 0);
+    draw_shape(currentBlock.x, currentBlock.y, 0);
 }
 
 void gameover(enum GameState *state)
