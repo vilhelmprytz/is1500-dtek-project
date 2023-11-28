@@ -18,6 +18,7 @@
 
 int current_score;
 int btn;
+bool is_occupied;
 
 void delay(int num)
 {
@@ -35,7 +36,7 @@ void menu(enum GameState *state)
     display_update();
 }
 
-void draw_block(int x, int y, int oledstate)
+void draw_block(int x, int y, int oledstate, bool check, bool *is_occupied)
 {
     int loop;
     for (loop = 0; loop < BLOCK_SIZE; loop++)
@@ -43,12 +44,23 @@ void draw_block(int x, int y, int oledstate)
         int innerloop;
         for (innerloop = 0; innerloop < BLOCK_SIZE; innerloop++)
         {
-            display[y + loop][x + innerloop] = oledstate;
+            if (check)
+            {
+                if (display[y + loop][x + innerloop] == 1)
+                {
+
+                    *is_occupied = true;
+                }
+            }
+            else
+            {
+                display[y + loop][x + innerloop] = oledstate;
+            }
         }
     }
 }
 
-void draw_shape(int x, int y, int oledstate)
+void draw_shape(int x, int y, int oledstate, bool check, bool *is_occupied)
 {
     switch (currentBlock.shape)
     {
@@ -58,20 +70,19 @@ void draw_shape(int x, int y, int oledstate)
         {
         case UP:
         case DOWN:
-            draw_block(x, y, oledstate);
-            draw_block(x + BLOCK_SIZE, y, oledstate);
-            draw_block(x + BLOCK_SIZE * 2, y, oledstate);
-            draw_block(x + BLOCK_SIZE * 3, y, oledstate);
+            draw_block(x, y, oledstate, check, is_occupied);
+            draw_block(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
+            draw_block(x + BLOCK_SIZE * 2, y, oledstate, check, is_occupied);
+            draw_block(x + BLOCK_SIZE * 3, y, oledstate, check, is_occupied);
             return;
         case LEFT:
         case RIGHT:
-            draw_block(x, y, oledstate);
-            draw_block(x, y + BLOCK_SIZE, oledstate);
-            draw_block(x, y + BLOCK_SIZE * 2, oledstate);
-            draw_block(x, y + BLOCK_SIZE * 3, oledstate);
+            draw_block(x, y, oledstate, check, is_occupied);
+            draw_block(x, y + BLOCK_SIZE, oledstate, check, is_occupied);
+            draw_block(x, y + BLOCK_SIZE * 2, oledstate, check, is_occupied);
+            draw_block(x, y + BLOCK_SIZE * 3, oledstate, check, is_occupied);
             return;
         }
-
         return;
     }
 }
@@ -129,49 +140,35 @@ void check_full_rows()
     }
 }
 
-bool check_will_be_out_of_bounds(int x, int y, enum Direction direction)
+bool check_will_not_be_out_of_bounds(int x, int y, enum Direction direction)
 {
-    // if (direction == DOWN)
+    is_occupied = false;
+
     if (direction == DOWN)
     {
-        // directly under
-        if (display[y][x + BLOCK_SIZE] == 1)
-        {
-            return false;
-        }
-        // to the left
-        if (display[y + BLOCK_SIZE - 1][x + BLOCK_SIZE] == 1)
+        // draw_shape with check mode
+        draw_shape(x, y + 1, 1, true, &is_occupied);
+        if (is_occupied == true)
         {
             return false;
         }
     }
 
-    // if (direction == LEFT)
     if (direction == LEFT)
     {
-        // top, to the left
-        if (display[y + BLOCK_SIZE][x] == 1)
-        {
-            return false;
-        }
-
-        // bottom, to the left
-        if (display[y + BLOCK_SIZE][x + BLOCK_SIZE - 1] == 1)
+        // draw_shape with check mode
+        draw_shape(x + BLOCK_SIZE, y, 1, true, &is_occupied);
+        if (is_occupied == true)
         {
             return false;
         }
     }
 
-    // if (direction == RIGHT)
     if (direction == RIGHT)
     {
-        // top, to the right
-        if (display[y - 1][x] == 1)
-        {
-            return false;
-        }
-        // bottom, to the right
-        if (display[y - 1][x + BLOCK_SIZE - 1] == 1)
+        // draw_shape with check mode
+        draw_shape(x - BLOCK_SIZE, y, 1, true, &is_occupied);
+        if (is_occupied == true)
         {
             return false;
         }
@@ -182,6 +179,8 @@ bool check_will_be_out_of_bounds(int x, int y, enum Direction direction)
 
 void tetris_game_isr(void)
 {
+    draw_shape(currentBlock.x, currentBlock.y, 0, false, &is_occupied);
+
     // BTN2, rotation
     if (((btn) & 0x00000001) == 1)
     {
@@ -192,9 +191,9 @@ void tetris_game_isr(void)
     // BTN4 check
     if (btn >> 2 == 1)
     {
-        if (check_will_be_out_of_bounds(currentBlock.y, currentBlock.y, LEFT) != false)
+        if (check_will_not_be_out_of_bounds(currentBlock.x, currentBlock.y, LEFT))
         {
-            draw_shape(currentBlock.x, currentBlock.y, 0);
+            // draw_shape(currentBlock.x, currentBlock.y, 0, false, &is_occupied);
             currentBlock.y = currentBlock.y + BLOCK_SIZE;
         }
     }
@@ -203,9 +202,9 @@ void tetris_game_isr(void)
     if (((btn >> 1) & 0x00000001) == 1)
     {
 
-        if (check_will_be_out_of_bounds(currentBlock.x, currentBlock.y, RIGHT) != false)
+        if (check_will_not_be_out_of_bounds(currentBlock.x, currentBlock.y, RIGHT))
         {
-            draw_shape(currentBlock.x, currentBlock.y, 0);
+            // draw_shape(currentBlock.x, currentBlock.y, 0, false, &is_occupied);
             currentBlock.y = currentBlock.y - BLOCK_SIZE;
         }
     }
@@ -214,11 +213,11 @@ void tetris_game_isr(void)
     // one block is 3x3 pixels
 
     // now collision
-    if (check_will_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN) == false)
+    if (check_will_not_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN) == false)
     {
         // check closest whole block
         // draw it
-        draw_shape(currentBlock.x, currentBlock.y, 1);
+        draw_shape(currentBlock.x, currentBlock.y, 1, false, &is_occupied);
 
         // now clear rows
         check_full_rows();
@@ -228,7 +227,7 @@ void tetris_game_isr(void)
         currentBlock.y = 1;
 
         // check also if new block is stuck
-        if (check_will_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN) == false)
+        if (check_will_not_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN) == false)
         {
             // game over
             state = GAMEOVER;
@@ -243,9 +242,8 @@ void game(enum GameState *state)
 
     delay(100000);
 
-    if (check_will_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN) != false)
+    if (check_will_not_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN) == true)
     {
-        draw_shape(currentBlock.x, currentBlock.y, 0);
         currentBlock.x = currentBlock.x + 1;
     }
 
@@ -264,11 +262,12 @@ void game(enum GameState *state)
         display[row][GAME_HEIGHT + 1] = 1;
     }
 
-    draw_shape(currentBlock.x, currentBlock.y, 1);
+    draw_shape(currentBlock.x, currentBlock.y, 1, false, &is_occupied);
 
     display_change();
 
-    draw_shape(currentBlock.x, currentBlock.y, 0);
+    // undraw temporarily
+    draw_shape(currentBlock.x, currentBlock.y, 0, false, &is_occupied);
 }
 
 void gameover(enum GameState *state)

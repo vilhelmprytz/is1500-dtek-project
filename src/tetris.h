@@ -1,5 +1,4 @@
 
-
 enum GameState
 {
     MENU,
