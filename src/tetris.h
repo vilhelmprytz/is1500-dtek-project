@@ -13,7 +13,8 @@ enum Direction
     LEFT,
     RIGHT,
     DOWN,
-    UP
+    UP,
+    ROTATE
 };
 
 enum Shape

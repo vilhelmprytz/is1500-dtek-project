@@ -18,7 +18,14 @@
 
 int current_score;
 int btn;
+int intended_action;
 bool is_occupied;
+
+// intended_action
+// 0 - do nothing
+// 1 - move left
+// 2 - move right
+// 3 - rotate
 
 void delay(int num)
 {
@@ -147,7 +154,7 @@ bool check_will_not_be_out_of_bounds(int x, int y, enum Direction direction)
     if (direction == DOWN)
     {
         // draw_shape with check mode
-        draw_shape(x, y + 1, 1, true, &is_occupied);
+        draw_shape(x + 1, y, 1, true, &is_occupied);
         if (is_occupied == true)
         {
             return false;
@@ -157,7 +164,7 @@ bool check_will_not_be_out_of_bounds(int x, int y, enum Direction direction)
     if (direction == LEFT)
     {
         // draw_shape with check mode
-        draw_shape(x + BLOCK_SIZE, y, 1, true, &is_occupied);
+        draw_shape(x, y + BLOCK_SIZE, 1, true, &is_occupied);
         if (is_occupied == true)
         {
             return false;
@@ -167,7 +174,20 @@ bool check_will_not_be_out_of_bounds(int x, int y, enum Direction direction)
     if (direction == RIGHT)
     {
         // draw_shape with check mode
-        draw_shape(x - BLOCK_SIZE, y, 1, true, &is_occupied);
+        draw_shape(x, y - BLOCK_SIZE, 1, true, &is_occupied);
+        if (is_occupied == true)
+        {
+            return false;
+        }
+    }
+
+    if (direction == ROTATE)
+    {
+        enum Direction old_rotation = currentBlock.rotation;
+        currentBlock.rotation = (currentBlock.rotation + 1) % 4;
+        draw_shape(x, y, 1, true, &is_occupied);
+        // return back
+        currentBlock.rotation = old_rotation;
         if (is_occupied == true)
         {
             return false;
@@ -179,18 +199,47 @@ bool check_will_not_be_out_of_bounds(int x, int y, enum Direction direction)
 
 void tetris_game_isr(void)
 {
-    draw_shape(currentBlock.x, currentBlock.y, 0, false, &is_occupied);
-
     // BTN2, rotation
     if (((btn) & 0x00000001) == 1)
     {
-        currentBlock.rotation = (currentBlock.rotation + 1) % 4;
+        intended_action = 3;
     }
 
-    // try
-    // BTN4 check
+    // BTN4, turn left
     if (btn >> 2 == 1)
     {
+        intended_action = 1;
+    }
+
+    // BTN4, turn left
+    if (((btn >> 1) & 0x00000001) == 1)
+    {
+        intended_action = 2;
+    }
+}
+
+void game(enum GameState *state)
+{
+    // get status of buttons
+    btn = getbtns();
+
+    // just slow things down
+    delay(100000);
+
+    // rotate shape
+    if (intended_action == 3)
+    {
+        intended_action = 0;
+        if (check_will_not_be_out_of_bounds(currentBlock.x, currentBlock.y, ROTATE))
+        {
+            currentBlock.rotation = (currentBlock.rotation + 1) % 4;
+        }
+    }
+
+    // turn LEFT
+    if (intended_action == 1)
+    {
+        intended_action = 0;
         if (check_will_not_be_out_of_bounds(currentBlock.x, currentBlock.y, LEFT))
         {
             // draw_shape(currentBlock.x, currentBlock.y, 0, false, &is_occupied);
@@ -198,10 +247,10 @@ void tetris_game_isr(void)
         }
     }
 
-    // BTN3 check
-    if (((btn >> 1) & 0x00000001) == 1)
+    // turn RIGHT
+    if (intended_action == 2)
     {
-
+        intended_action = 0;
         if (check_will_not_be_out_of_bounds(currentBlock.x, currentBlock.y, RIGHT))
         {
             // draw_shape(currentBlock.x, currentBlock.y, 0, false, &is_occupied);
@@ -230,18 +279,11 @@ void tetris_game_isr(void)
         if (check_will_not_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN) == false)
         {
             // game over
-            state = GAMEOVER;
+            *state = GAMEOVER;
         }
     }
-}
 
-void game(enum GameState *state)
-{
-    // get status of buttons
-    btn = getbtns();
-
-    delay(100000);
-
+    // no collision, move the shape down
     if (check_will_not_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN) == true)
     {
         currentBlock.x = currentBlock.x + 1;
