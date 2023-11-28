@@ -30,7 +30,7 @@ void user_isr(void)
         {
             currentBlock.x = 4;
             currentBlock.y = ((30 / 3) / 2) * 3 + 1;
-            currentBlock.shape = J;
+            currentBlock.shape = L;
             currentBlock.rotation = DOWN;
 
             state = GAME;

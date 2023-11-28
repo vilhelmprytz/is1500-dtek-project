@@ -120,6 +120,36 @@ void draw_shape(int x, int y, int oledstate, bool check, bool *is_occupied)
             draw_square(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
             return;
         }
+
+    case L:
+        switch (currentBlock.rotation)
+        {
+        case UP:
+            draw_square(x, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE * 2, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE * 2, y - BLOCK_SIZE, oledstate, check, is_occupied);
+            return;
+        case DOWN:
+            draw_square(x, y, oledstate, check, is_occupied);
+            draw_square(x, y + BLOCK_SIZE, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE * 2, y, oledstate, check, is_occupied);
+            return;
+        case LEFT:
+            draw_square(x, y, oledstate, check, is_occupied);
+            draw_square(x - BLOCK_SIZE, y + BLOCK_SIZE * 2, oledstate, check, is_occupied);
+            draw_square(x, y + BLOCK_SIZE, oledstate, check, is_occupied);
+            draw_square(x, y + BLOCK_SIZE * 2, oledstate, check, is_occupied);
+            return;
+        case RIGHT:
+            draw_square(x, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
+            draw_square(x, y + BLOCK_SIZE, oledstate, check, is_occupied);
+            draw_square(x, y + BLOCK_SIZE * 2, oledstate, check, is_occupied);
+            return;
+             
+        }
     }
 }
 
