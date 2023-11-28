@@ -11,7 +11,7 @@
 #include "buttons.h"
 #include "tetris.h"
 
-#define GAME_HEIGHT 60
+#define GAME_HEIGHT 120
 #define GAME_WIDTH 30
 #define BLOCK_SIZE 3
 #define MAX_HIGH_SCORES 5 // maybe less for high score
@@ -91,6 +91,18 @@ void draw_shape(int x, int y, int oledstate, bool check, bool *is_occupied)
             return;
         }
         return;
+
+    case J:
+        switch (currentBlock.rotation)
+        {
+        case UP:
+        case DOWN:
+            draw_block(x, y, oledstate, check, is_occupied);
+            draw_block(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
+            draw_block(x + BLOCK_SIZE * 2, y, oledstate, check, is_occupied);
+            draw_block(x + BLOCK_SIZE * 2, y + BLOCK_SIZE, oledstate, check, is_occupied);
+            return;
+        }
     }
 }
 
