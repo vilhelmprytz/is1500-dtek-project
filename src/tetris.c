@@ -48,6 +48,19 @@ void draw_block(int x, int y, int oledstate)
     }
 }
 
+void draw_shape(int x, int y, int oledstate)
+{
+    switch (currentBlock.shape)
+    {
+    // I
+    case I:
+        draw_block(x, y, oledstate);
+        draw_block(x + BLOCK_SIZE, y, oledstate);
+
+        return;
+    }
+}
+
 void check_full_rows()
 {
     // check if row is full
