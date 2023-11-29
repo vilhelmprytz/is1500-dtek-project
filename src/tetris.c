@@ -375,24 +375,24 @@ bool check_will_not_be_out_of_bounds(int x, int y, enum Direction direction)
 
 void tetris_game_isr(void)
 {
-    // BTN2, rotation
-    if (((btn) & 0x00000001) == 1)
+    if (btn & 0x00000008) // BTN1 for fast drop
+    {
+        intended_action = 4;
+    }
+    else if (btn & 0x00000001) // BTN2, rotation
     {
         intended_action = 3;
     }
-
-    // BTN4, turn left
-    if (btn >> 2 == 1)
+    else if (btn & 0x00000004) // BTN4, turn left
     {
         intended_action = 1;
     }
-
-    // BTN4, turn left
-    if (((btn >> 1) & 0x00000001) == 1)
+    else if (btn & 0x00000002) // BTN3, turn right
     {
         intended_action = 2;
     }
 }
+
 
 void game(enum GameState *state)
 {
@@ -405,6 +405,18 @@ void game(enum GameState *state)
     // {
     //     currentBlock.shape = S;
     // }
+
+        // fast drop
+    if (intended_action == 4) 
+    {
+        intended_action = 0; // reset intended action
+        while (check_will_not_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN)) 
+        {
+            currentBlock.x += 1; // Move the block down
+        }
+        // Ensure that the block is drawn at its new position
+        draw_shape(currentBlock.x, currentBlock.y, 1, false, &is_occupied);
+    }
 
     // just slow things down
     delay(100000);
