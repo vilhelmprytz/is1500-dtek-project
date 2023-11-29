@@ -27,6 +27,7 @@ bool is_occupied;
 // 1 - move left
 // 2 - move right
 // 3 - rotate
+// 4 - fast drop
 
 void delay(int num)
 {
