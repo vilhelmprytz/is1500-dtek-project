@@ -10,6 +10,7 @@
 #include "display.h"
 #include "buttons.h"
 #include "tetris.h"
+#include "random.h"
 
 #define GAME_HEIGHT 120
 #define GAME_WIDTH 30
@@ -69,6 +70,30 @@ void draw_square(int x, int y, int oledstate, bool check, bool *is_occupied)
 
 void draw_shape(int x, int y, int oledstate, bool check, bool *is_occupied)
 {
+    // TEST
+    draw_square(126, 1, oledstate, false, is_occupied);
+    draw_square(126, 5, oledstate, false, is_occupied);
+    draw_square(126, 9, oledstate, false, is_occupied);
+    draw_square(126, 13, oledstate, false, is_occupied);
+
+    // TEST ALOT
+    if (currentBlock.rotation == UP)
+    {
+        draw_square(122, 1, oledstate, false, is_occupied);
+    }
+    else if (currentBlock.rotation == DOWN)
+    {
+        draw_square(122, 5, oledstate, false, is_occupied);
+    }
+    else if (currentBlock.rotation == LEFT)
+    {
+        draw_square(122, 9, oledstate, false, is_occupied);
+    }
+    else if (currentBlock.rotation == RIGHT)
+    {
+        draw_square(122, 13, oledstate, false, is_occupied);
+    }
+
     switch (currentBlock.shape)
     {
     // I
@@ -92,6 +117,7 @@ void draw_shape(int x, int y, int oledstate, bool check, bool *is_occupied)
         }
         return;
 
+    // J
     case J:
         switch (currentBlock.rotation)
         {
@@ -122,6 +148,7 @@ void draw_shape(int x, int y, int oledstate, bool check, bool *is_occupied)
         }
         return;
 
+    // L
     case L:
         switch (currentBlock.rotation)
         {
@@ -152,47 +179,18 @@ void draw_shape(int x, int y, int oledstate, bool check, bool *is_occupied)
         }
         return;
 
+    // O
     case O:
-        switch(currentBlock.rotation)
+        switch (currentBlock.rotation)
         {
         case UP:
         case DOWN:
         case LEFT:
-        case RIGHT: 
+        case RIGHT:
             draw_square(x, y, oledstate, check, is_occupied);
             draw_square(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
             draw_square(x + BLOCK_SIZE, y + BLOCK_SIZE, oledstate, check, is_occupied);
             draw_square(x, y + BLOCK_SIZE, oledstate, check, is_occupied);
-            return;
-        }
-        return;
-
-    case T:
-        switch (currentBlock.rotation)
-        {
-            case UP:
-            draw_square(x, y, oledstate, check, is_occupied);
-            draw_square(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
-            draw_square(x + BLOCK_SIZE * 2, y, oledstate, check, is_occupied);
-            draw_square(x + BLOCK_SIZE, y + BLOCK_SIZE, oledstate, check, is_occupied);
-            return;
-    case DOWN:
-            draw_square(x, y, oledstate, check, is_occupied);
-            draw_square(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
-            draw_square(x + BLOCK_SIZE * 2, y, oledstate, check, is_occupied);
-            draw_square(x + BLOCK_SIZE, y - BLOCK_SIZE, oledstate, check, is_occupied);
-            return;
-    case LEFT:
-            draw_square(x, y, oledstate, check, is_occupied);
-            draw_square(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
-            draw_square(x + BLOCK_SIZE, y + BLOCK_SIZE, oledstate, check, is_occupied);
-            draw_square(x + BLOCK_SIZE, y - BLOCK_SIZE, oledstate, check, is_occupied);
-            return;
-    case RIGHT:
-            draw_square(x, y, oledstate, check, is_occupied);
-            draw_square(x, y + BLOCK_SIZE, oledstate, check, is_occupied);
-            draw_square(x - BLOCK_SIZE, y + BLOCK_SIZE, oledstate, check, is_occupied);
-            draw_square(x, y + BLOCK_SIZE * 2, oledstate, check, is_occupied);
             return;
         }
         return;
@@ -201,23 +199,74 @@ void draw_shape(int x, int y, int oledstate, bool check, bool *is_occupied)
     case S:
         switch (currentBlock.rotation)
         {
-    case UP:
-    case DOWN:
+        case UP:
+        case DOWN:
             draw_square(x, y, oledstate, check, is_occupied);
+            draw_square(x, y - BLOCK_SIZE, oledstate, check, is_occupied);
             draw_square(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
             draw_square(x + BLOCK_SIZE, y + BLOCK_SIZE, oledstate, check, is_occupied);
-            draw_square(x + BLOCK_SIZE * 2, y + BLOCK_SIZE, oledstate, check, is_occupied);
             return;
-    case LEFT:
-    case RIGHT:
+        case LEFT:
+        case RIGHT:
+            draw_square(x, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE, y - BLOCK_SIZE, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE * 2, y - BLOCK_SIZE, oledstate, check, is_occupied);
+            return;
+        }
+        return;
+
+    // T
+    case T:
+        switch (currentBlock.rotation)
+        {
+        case UP:
             draw_square(x, y, oledstate, check, is_occupied);
             draw_square(x, y + BLOCK_SIZE, oledstate, check, is_occupied);
+            draw_square(x, y - BLOCK_SIZE, oledstate, check, is_occupied);
             draw_square(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
+            return;
+        case DOWN:
+            draw_square(x, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE, y - BLOCK_SIZE, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE, y + BLOCK_SIZE, oledstate, check, is_occupied);
+            return;
+        case LEFT:
+            draw_square(x, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE * 2, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE, y + BLOCK_SIZE, oledstate, check, is_occupied);
+            return;
+        case RIGHT:
+            draw_square(x, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE * 2, y, oledstate, check, is_occupied);
             draw_square(x + BLOCK_SIZE, y - BLOCK_SIZE, oledstate, check, is_occupied);
             return;
         }
         return;
 
+    // Z
+    case Z:
+        switch (currentBlock.rotation)
+        {
+        case UP:
+        case DOWN:
+            draw_square(x, y, oledstate, check, is_occupied);
+            draw_square(x, y + BLOCK_SIZE, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE, y - BLOCK_SIZE, oledstate, check, is_occupied);
+            return;
+        case LEFT:
+        case RIGHT:
+            draw_square(x, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE, y, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE, y + BLOCK_SIZE, oledstate, check, is_occupied);
+            draw_square(x + BLOCK_SIZE * 2, y + BLOCK_SIZE, oledstate, check, is_occupied);
+            return;
+        }
+        return;
     }
 }
 
@@ -350,6 +399,13 @@ void game(enum GameState *state)
     // get status of buttons
     btn = getbtns();
 
+    // DEBUG CAN BE REMOVED
+    // BTN1, turn left
+    // if (btn >> 3 == 1)
+    // {
+    //     currentBlock.shape = S;
+    // }
+
     // just slow things down
     delay(100000);
 
@@ -401,6 +457,8 @@ void game(enum GameState *state)
         // new block
         currentBlock.x = 4;
         currentBlock.y = ((30 / 3) / 2) * 3 + 1;
+
+        currentBlock.shape = rand() % 7;
 
         // check also if new block is stuck
         if (check_will_not_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN) == false)

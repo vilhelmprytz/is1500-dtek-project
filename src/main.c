@@ -16,6 +16,7 @@
 #include <pic32mx.h> /* Declarations of system-specific addresses etc */
 #include "display.h" /* Declatations for these labs */
 #include "tetris.h"
+#include "random.h"
 
 enum GameState state;
 
@@ -30,8 +31,8 @@ void user_isr(void)
         {
             currentBlock.x = 4;
             currentBlock.y = ((30 / 3) / 2) * 3 + 1;
-            currentBlock.shape = T;
-            currentBlock.rotation = DOWN;
+            currentBlock.shape = rand() % 7;
+            currentBlock.rotation = UP;
 
             state = GAME;
         }
@@ -152,6 +153,9 @@ int main(void)
 
     // init timer interrupt
     timerinit();
+
+    // seed our pseudo random function
+    srand(3817239034827);
 
     // keep track of state
     state = MENU;
