@@ -155,7 +155,7 @@ int main(void)
     timerinit();
 
     // seed our pseudo random function
-    srand(3817239034827);
+    srand(72390347);
 
     // keep track of state
     state = MENU;
