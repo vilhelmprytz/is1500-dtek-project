@@ -13,12 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: install deps
-        run: apt-get install bzip2 make libftdi-dev curl -y
+        run: sudo apt-get install bzip2 make libftdi-dev curl -y
       - name: download mcb32tools
         run: curl -L -O https://github.com/is1200-example-projects/mcb32tools/releases/download/v2.2/mcb32tools-v2.2-x86_64-linux-gnu.run
       - name: install mcb32tools
-        run: chmod +x mcb32tools-v2.2-x86_64-linux-gnu.run && ./mcb32tools-v2.2-x86_64-linux-gnu.run
+        run: chmod +x mcb32tools-v2.2-x86_64-linux-gnu.run && sudo ./mcb32tools-v2.2-x86_64-linux-gnu.run
       - name: source
         run: source /opt/mcb32tools/environment
       - name: make
-        run: make
+        run: cd src && make
