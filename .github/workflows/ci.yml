@@ -19,7 +19,5 @@ jobs:
         run: curl -L -O https://github.com/is1200-example-projects/mcb32tools/releases/download/v2.2/mcb32tools-v2.2-x86_64-linux-gnu.run
       - name: install mcb32tools
         run: chmod +x mcb32tools-v2.2-x86_64-linux-gnu.run && sudo ./mcb32tools-v2.2-x86_64-linux-gnu.run
-      - name: source
-        run: source /opt/mcb32tools/environment
       - name: make
-        run: cd src && make
+        run: source /opt/mcb32tools/environment && cd src && make
