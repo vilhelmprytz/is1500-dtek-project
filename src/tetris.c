@@ -394,7 +394,6 @@ void tetris_game_isr(void)
     }
 }
 
-
 void game(enum GameState *state)
 {
     // get status of buttons
@@ -406,18 +405,6 @@ void game(enum GameState *state)
     // {
     //     currentBlock.shape = S;
     // }
-
-        // fast drop
-    if (intended_action == 4) 
-    {
-        intended_action = 0; // reset intended action
-        while (check_will_not_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN)) 
-        {
-            currentBlock.x += 1; // Move the block down
-        }
-        // Ensure that the block is drawn at its new position
-        draw_shape(currentBlock.x, currentBlock.y, 1, false, &is_occupied);
-    }
 
     // just slow things down
     delay(100000);
@@ -451,6 +438,16 @@ void game(enum GameState *state)
         {
             // draw_shape(currentBlock.x, currentBlock.y, 0, false, &is_occupied);
             currentBlock.y = currentBlock.y - BLOCK_SIZE;
+        }
+    }
+
+    // fast drop
+    if (intended_action == 4)
+    {
+        intended_action = 0; // reset intended action
+        while (check_will_not_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN))
+        {
+            currentBlock.x += 1; // Move the block down
         }
     }
 
