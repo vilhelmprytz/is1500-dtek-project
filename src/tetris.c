@@ -71,30 +71,6 @@ void draw_square(int x, int y, int oledstate, bool check, bool *is_occupied)
 
 void draw_shape(int x, int y, int oledstate, bool check, bool *is_occupied)
 {
-    // TEST
-    draw_square(126, 1, oledstate, false, is_occupied);
-    draw_square(126, 5, oledstate, false, is_occupied);
-    draw_square(126, 9, oledstate, false, is_occupied);
-    draw_square(126, 13, oledstate, false, is_occupied);
-
-    // TEST ALOT
-    if (currentBlock.rotation == UP)
-    {
-        draw_square(122, 1, oledstate, false, is_occupied);
-    }
-    else if (currentBlock.rotation == DOWN)
-    {
-        draw_square(122, 5, oledstate, false, is_occupied);
-    }
-    else if (currentBlock.rotation == LEFT)
-    {
-        draw_square(122, 9, oledstate, false, is_occupied);
-    }
-    else if (currentBlock.rotation == RIGHT)
-    {
-        draw_square(122, 13, oledstate, false, is_occupied);
-    }
-
     switch (currentBlock.shape)
     {
     // I
