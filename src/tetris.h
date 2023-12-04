@@ -56,3 +56,4 @@ typedef struct
 } Block;
 
 Block currentBlock;
+int current_score;

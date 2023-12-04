@@ -319,7 +319,6 @@ void check_full_rows()
         if (row_full == true)
         {
             current_score++;
-            display[1 + current_score][120] = 1;
         }
     }
 }

@@ -29,6 +29,7 @@ void user_isr(void)
         // BTN4 check
         if (btn >> 2 == 1)
         {
+            current_score = 0;
             currentBlock.x = 4;
             currentBlock.y = ((30 / 3) / 2) * 3 + 1;
             currentBlock.shape = rand() % 7;
