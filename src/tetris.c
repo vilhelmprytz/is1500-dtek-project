@@ -15,12 +15,14 @@
 #define GAME_HEIGHT 60
 #define GAME_WIDTH 30
 #define BLOCK_SIZE 3
-#define MAX_HIGH_SCORES 5 // maybe less for high score
+#define MAX_HIGH_SCORES 3 // maybe less for high score
 
 int current_score;
 int btn;
 int intended_action;
 bool is_occupied;
+
+int highScores[3];
 
 // intended_action
 // 0 - do nothing
@@ -369,10 +371,17 @@ void tetris_game_isr(void)
     }
 }
 
+void draw_score()
+{
+    display[4][70] = 1;
+}
+
 void game(enum GameState *state)
 {
     // get status of buttons
     btn = getbtns();
+
+    draw_score();
 
     // just slow things down
     delay(250000);
@@ -443,6 +452,9 @@ void game(enum GameState *state)
         {
             // game over
             *state = GAMEOVER;
+
+            // save score
+            updateHighScore(current_score);
         }
     }
 
@@ -485,35 +497,6 @@ void gameover(enum GameState *state)
 }
 
 /*
-High score structure
-*/
-
-typedef struct
-{
-    int score;
-    // Add more fields if needed (e.g., player name, date)
-} HighScore;
-
-/*
-Global high score array
-*/
-
-HighScore highScores[MAX_HIGH_SCORES];
-
-/*
-Initialize high scores
-*/
-
-void initializeHighScores()
-{
-    int i;
-    for (i = 0; i < MAX_HIGH_SCORES; i++)
-    {
-        highScores[i].score = 0; // Initialize to zero or any default value
-    }
-}
-
-/*
 Updating high scores
 */
 
@@ -522,7 +505,7 @@ void updateHighScore(int newScore)
     int i;
     for (i = 0; i < MAX_HIGH_SCORES; i++)
     {
-        if (newScore > highScores[i].score)
+        if (newScore > highScores[i])
         {
             // Shift lower scores down
             int j;
@@ -531,7 +514,7 @@ void updateHighScore(int newScore)
                 highScores[j] = highScores[j - 1];
             }
             // Insert new high score
-            highScores[i].score = newScore;
+            highScores[i] = newScore;
             break;
         }
     }
@@ -549,8 +532,7 @@ void highscore(enum GameState *state)
     int i;
     for (i = 0; i < MAX_HIGH_SCORES; i++)
     {
-        // sprintf(scoreLine, "%d. Score: %d", i + 1, highScores[i].score);
-        display_string(i + 1, scoreLine); // Adjust the line number as needed
+        display_string(i + 1, itoaconv(highScores[i])); // Adjust the line number as needed
     }
 
     display_update();
