@@ -12,7 +12,7 @@
 #include "tetris.h"
 #include "random.h"
 
-#define GAME_HEIGHT 120
+#define GAME_HEIGHT 60
 #define GAME_WIDTH 30
 #define BLOCK_SIZE 3
 #define MAX_HIGH_SCORES 5 // maybe less for high score
@@ -373,13 +373,6 @@ void game(enum GameState *state)
 {
     // get status of buttons
     btn = getbtns();
-
-    // DEBUG CAN BE REMOVED
-    // BTN1, turn left
-    // if (btn >> 3 == 1)
-    // {
-    //     currentBlock.shape = S;
-    // }
 
     // just slow things down
     delay(250000);
