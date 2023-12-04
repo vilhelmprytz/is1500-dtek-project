@@ -407,7 +407,7 @@ void game(enum GameState *state)
     // }
 
     // just slow things down
-    delay(100000);
+    delay(250000);
 
     // rotate shape
     if (intended_action == 3)
