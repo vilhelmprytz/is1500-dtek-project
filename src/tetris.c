@@ -397,9 +397,38 @@ void draw_int(int x, int y, int num)
         {
             display[x][y + i] = 1;
         }
+        display[x + 1][y + 1] = 1;
         display[x + 1][y + 6] = 1;
         display[x + 1][y + 6] = 1;
         display[x - 1][y + 6] = 1;
+        return;
+    case 2:
+        display[x][y] = 1;
+        display[x + 1][y] = 1;
+        display[x + 2][y + 1] = 1;
+        display[x - 1][y + 1] = 1;
+        display[x - 1][y + 2] = 1;
+        display[x][y + 3] = 1;
+        display[x + 1][y + 4] = 1;
+        display[x + 2][y + 5] = 1;
+        display[x + 2][y + 6] = 1;
+        display[x + 1][y + 6] = 1;
+        display[x][y + 6] = 1;
+        display[x - 1][y + 6] = 1;
+        return;
+    case 3:
+        display[x][y] = 1;
+        display[x + 1][y] = 1;
+        display[x + 2][y + 1] = 1;
+        display[x - 1][y + 1] = 1;
+        display[x - 1][y + 2] = 1;
+        display[x][y + 3] = 1;
+        display[x + 1][y + 3] = 1;
+        display[x - 1][y + 4] = 1;
+        display[x - 1][y + 5] = 1;
+        display[x][y + 6] = 1;
+        display[x + 1][y + 6] = 1;
+        display[x + 2][y + 5] = 1;
         return;
     }
     return;
@@ -408,8 +437,10 @@ void draw_int(int x, int y, int num)
 void draw_score()
 {
     // this is bad but it does work!!
-    draw_int(20, 80, 1);
     draw_int(26, 80, 0);
+    draw_int(20, 80, 1);
+    draw_int(14, 80, 2);
+    draw_int(8, 80, 3);
 }
 
 void game(enum GameState *state)
@@ -496,7 +527,7 @@ void game(enum GameState *state)
     // no collision, move the shape down
     if (check_will_not_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN) == true)
     {
-        currentBlock.x = currentBlock.x + 1;
+        // currentBlock.x = currentBlock.x + 1;
     }
 
     // draw boundaries
