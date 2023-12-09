@@ -310,25 +310,25 @@ void display_convert()
   // The display memory is organized as four pages of 128 bytes each. Each memory page corresponds to an 8-pixel-high stripe across the display.
   // Each byte in the memory page corresponds to an 8-pixel-high column on the display.
   int page, row, column;
-  uint8_t powerOfTwo = 1;
-  uint8_t oledNumber = 0;
+  uint8_t power_of_two = 1;
+  uint8_t oled_number = 0;
 
   for (page = 0; page < 4; page++)
   {
     for (column = 0; column < 128; column++)
     {
-      powerOfTwo = 1;
-      oledNumber = 0;
+      power_of_two = 1;
+      oled_number = 0;
 
       for (row = 0; row < 8; row++)
       {
         if (display[8 * page + row][column])
         {
-          oledNumber |= powerOfTwo;
+          oled_number |= power_of_two;
         }
-        powerOfTwo <<= 1;
+        power_of_two <<= 1;
       }
-      oled_display[column + page * 128] = oledNumber;
+      oled_display[column + page * 128] = oled_number;
     }
   }
 }
