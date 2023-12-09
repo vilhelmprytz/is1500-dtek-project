@@ -52,6 +52,7 @@ typedef struct
     int x;
     int y;
     enum Shape shape;
+    enum Shape nextShape;
     enum Direction rotation;
 } Block;
 

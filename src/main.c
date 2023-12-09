@@ -33,6 +33,7 @@ void user_isr(void)
             currentBlock.x = 4;
             currentBlock.y = ((30 / 3) / 2) * 3 + 1;
             currentBlock.shape = rand() % 7;
+            currentBlock.nextShape = rand() % 7;
             currentBlock.rotation = UP;
 
             state = GAME;
