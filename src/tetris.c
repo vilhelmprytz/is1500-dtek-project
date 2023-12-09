@@ -371,8 +371,45 @@ void tetris_game_isr(void)
     }
 }
 
+void draw_int(int x, int y, int num)
+{
+    int i;
+    switch (num)
+    {
+    case 0:
+        display[x + 1][y] = 1;
+        display[x][y] = 1;
+        display[x - 1][y] = 1;
+
+        display[x + 1][y + 6] = 1;
+        display[x][y + 6] = 1;
+        display[x - 1][y + 6] = 1;
+
+        for (i = 1; i <= 5; i++)
+        {
+            display[x + 2][y + i] = 1;
+            display[x - 2][y + i] = 1;
+        }
+
+        return;
+    case 1:
+        for (i = 0; i <= 6; i++)
+        {
+            display[x][y + i] = 1;
+        }
+        display[x + 1][y + 6] = 1;
+        display[x + 1][y + 6] = 1;
+        display[x - 1][y + 6] = 1;
+        return;
+    }
+    return;
+}
+
 void draw_score()
 {
+    // this is bad but it does work!!
+    draw_int(20, 80, 1);
+    draw_int(26, 80, 0);
 }
 
 void game(enum GameState *state)
