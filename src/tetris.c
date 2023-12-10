@@ -22,7 +22,10 @@ int btn;
 int intended_action;
 bool is_occupied;
 
+char initials[3] = "AAA";
+
 int highScores[3];
+char highScoreInitials[3][3] = {"AAA", "AAA", "AAA"};
 
 // intended_action
 // 0 - do nothing
@@ -468,9 +471,6 @@ void game(enum GameState *state)
         {
             // game over
             *state = GAMEOVER;
-
-            // save score
-            updateHighScore(current_score);
         }
     }
 
@@ -512,8 +512,8 @@ void gameover(enum GameState *state)
 {
     display_string(0, "GAME OVER");
     display_string(1, itoaconv(current_score));
-    display_string(2, "Press BTN4 for");
-    display_string(3, "menu");
+    display_string(2, initials);
+    display_string(3, "BTN4 - Menu");
     display_update();
 }
 
@@ -533,9 +533,21 @@ void updateHighScore(int newScore)
             for (j = MAX_HIGH_SCORES - 1; j > i; j--)
             {
                 highScores[j] = highScores[j - 1];
+                // Copy initials, without using strcpy
+                int k;
+                for (k = 0; k < 3; k++)
+                {
+                    highScoreInitials[j][k] = highScoreInitials[j - 1][k];
+                }
             }
             // Insert new high score
             highScores[i] = newScore;
+            // Insert new high socre initials, without using strcpy
+            int k;
+            for (k = 0; k < 3; k++)
+            {
+                highScoreInitials[i][k] = initials[k];
+            }
             break;
         }
     }
@@ -553,7 +565,19 @@ void highscore(enum GameState *state)
     int i;
     for (i = 0; i < MAX_HIGH_SCORES; i++)
     {
-        display_string(i + 1, itoaconv(highScores[i])); // Adjust the line number as needed
+        int k;
+        for (k = 0; k < 3; k++)
+        {
+            scoreLine[k] = highScoreInitials[i][k];
+        }
+
+        scoreLine[3] = *" ";
+
+        scoreLine[4] = *itoaconv(highScores[i] / 100);
+        scoreLine[5] = *itoaconv((highScores[i] / 10) % 10);
+        scoreLine[6] = *itoaconv(highScores[i] % 10);
+
+        display_string(i + 1, scoreLine); // Adjust the line number as needed
     }
 
     display_update();

@@ -58,6 +58,9 @@ typedef struct
 
 Block currentBlock;
 int current_score;
+char initials[3];
+
+char highScoreInitials[3][3];
 
 extern const uint8_t const num_font[7 * 5 * 10];
 
