@@ -374,64 +374,15 @@ void tetris_game_isr(void)
 void draw_int(int x, int y, int num)
 {
     int i;
-    switch (num)
+    int j;
+
+    for (i = 0; i < 7; i++)
     {
-    case 0:
-        display[x + 1][y] = 1;
-        display[x][y] = 1;
-        display[x - 1][y] = 1;
-
-        display[x + 1][y + 6] = 1;
-        display[x][y + 6] = 1;
-        display[x - 1][y + 6] = 1;
-
-        for (i = 1; i <= 5; i++)
+        for (j = 0; j < 5; j++)
         {
-            display[x + 2][y + i] = 1;
-            display[x - 2][y + i] = 1;
+            display[x + j][y + i] = num_font[num * 35 + i * 5 + j];
         }
-
-        return;
-    case 1:
-        for (i = 0; i <= 6; i++)
-        {
-            display[x][y + i] = 1;
-        }
-        display[x + 1][y + 1] = 1;
-        display[x + 1][y + 6] = 1;
-        display[x + 1][y + 6] = 1;
-        display[x - 1][y + 6] = 1;
-        return;
-    case 2:
-        display[x][y] = 1;
-        display[x + 1][y] = 1;
-        display[x + 2][y + 1] = 1;
-        display[x - 1][y + 1] = 1;
-        display[x - 1][y + 2] = 1;
-        display[x][y + 3] = 1;
-        display[x + 1][y + 4] = 1;
-        display[x + 2][y + 5] = 1;
-        display[x + 2][y + 6] = 1;
-        display[x + 1][y + 6] = 1;
-        display[x][y + 6] = 1;
-        display[x - 1][y + 6] = 1;
-        return;
-    case 3:
-        display[x][y] = 1;
-        display[x + 1][y] = 1;
-        display[x + 2][y + 1] = 1;
-        display[x - 1][y + 1] = 1;
-        display[x - 1][y + 2] = 1;
-        display[x][y + 3] = 1;
-        display[x + 1][y + 3] = 1;
-        display[x - 1][y + 4] = 1;
-        display[x - 1][y + 5] = 1;
-        display[x][y + 6] = 1;
-        display[x + 1][y + 6] = 1;
-        display[x + 2][y + 5] = 1;
-        return;
     }
-    return;
 }
 
 void draw_score()
@@ -441,6 +392,13 @@ void draw_score()
     draw_int(20, 80, 1);
     draw_int(14, 80, 2);
     draw_int(8, 80, 3);
+    draw_int(2, 80, 4);
+
+    draw_int(26, 90, 5);
+    draw_int(20, 90, 6);
+    draw_int(14, 90, 7);
+    draw_int(8, 90, 8);
+    draw_int(2, 90, 9);
 }
 
 void game(enum GameState *state)
@@ -527,7 +485,7 @@ void game(enum GameState *state)
     // no collision, move the shape down
     if (check_will_not_be_out_of_bounds(currentBlock.x, currentBlock.y, DOWN) == true)
     {
-        // currentBlock.x = currentBlock.x + 1;
+        currentBlock.x = currentBlock.x + 1;
     }
 
     // draw boundaries
