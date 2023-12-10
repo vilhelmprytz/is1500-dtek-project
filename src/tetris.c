@@ -17,6 +17,10 @@
 #define BLOCK_SIZE 3
 #define MAX_HIGH_SCORES 3 // maybe less for high score
 
+#define BASE_DELAY 250000 // Base delay when score is 0
+#define MIN_DELAY 2500    // Minimum delay when score is 450 or more
+#define TARGET_SCORE 450  // Score at which minimum delay is reached
+
 int current_score;
 int btn;
 int intended_action;
@@ -398,13 +402,27 @@ void draw_score()
     draw_int(14, 70, current_score % 10);
 }
 
+unsigned long calculate_delay()
+{
+    if (current_score >= TARGET_SCORE)
+    {
+        return MIN_DELAY;
+    }
+    else
+    {
+        // calculate delay based on current score
+        // this formula linearly decreases the delay value as the score increases
+        return BASE_DELAY - (current_score * (BASE_DELAY - MIN_DELAY) / TARGET_SCORE);
+    }
+}
+
 void game(enum GameState *state)
 {
     // get status of buttons
     btn = getbtns();
 
     // just slow things down
-    delay(250000);
+    delay(calculate_delay());
 
     // rotate shape
     if (intended_action == 3)
