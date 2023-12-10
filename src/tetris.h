@@ -58,3 +58,8 @@ typedef struct
 
 Block currentBlock;
 int current_score;
+
+extern const uint8_t const num_font[7 * 5 * 10];
+
+void updateHighScore(int newScore);
+void draw_score();
