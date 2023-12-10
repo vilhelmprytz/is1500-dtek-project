@@ -58,6 +58,13 @@ void user_isr(void)
         // BTN4 check
         if (btn >> 2 == 1)
         {
+
+            if (state == GAMEOVER)
+            {
+                // save score
+                updateHighScore(current_score);
+            }
+
             display_clear();
             state = MENU;
         }
