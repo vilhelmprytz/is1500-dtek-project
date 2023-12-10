@@ -18,6 +18,8 @@ embedded platform with limited resources.
 
 ## Usage
 
+Before you start, make sure you have [mcb32tools](https://github.com/is1200-example-projects/mcb32tools/releases/) installed.
+
 Connect the ChipKIT USB cable to your computer.
 
 In `src`, do:
