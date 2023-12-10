@@ -22,6 +22,8 @@ int btn;
 int intended_action;
 bool is_occupied;
 
+char initials[3] = "AAA";
+
 int highScores[3];
 
 // intended_action
@@ -512,8 +514,8 @@ void gameover(enum GameState *state)
 {
     display_string(0, "GAME OVER");
     display_string(1, itoaconv(current_score));
-    display_string(2, "Press BTN4 for");
-    display_string(3, "menu");
+    display_string(2, initials);
+    display_string(3, "BTN4 - Menu");
     display_update();
 }
 

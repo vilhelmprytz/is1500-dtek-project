@@ -63,6 +63,36 @@ void user_isr(void)
         }
     }
 
+    if (state == GAMEOVER)
+    {
+        int initial_num;
+        if (btn & 0x00000008) // BTN1
+        {
+            initial_num = 2;
+        }
+        else if (btn & 0x00000001) // BTN2
+        {
+            initial_num = 1;
+        }
+        else if (btn & 0x00000002) // BTN3
+        {
+            initial_num = 0;
+        }
+
+        // check that a buttin was pressed
+        if (btn)
+        {
+            if (initials[initial_num] < 'Z')
+            {
+                initials[initial_num]++;
+            }
+            else
+            {
+                initials[initial_num] = 'A';
+            }
+        }
+    }
+
     // Acknowledge the Timer 2 interrupt by clearing the interrupt flag
     IFSCLR(0) = 0x00000100;
 }
