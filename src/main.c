@@ -36,6 +36,8 @@ void user_isr(void)
             currentBlock.nextShape = rand() % 7;
             currentBlock.rotation = UP;
 
+            draw_score();
+
             state = GAME;
         }
 

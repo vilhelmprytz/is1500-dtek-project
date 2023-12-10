@@ -297,6 +297,9 @@ void check_full_rows()
         if (row_full == true)
         {
             current_score++;
+
+            // draw new score
+            draw_score();
         }
     }
 }
@@ -387,26 +390,15 @@ void draw_int(int x, int y, int num)
 
 void draw_score()
 {
-    // this is bad but it does work!!
-    draw_int(26, 80, 0);
-    draw_int(20, 80, 1);
-    draw_int(14, 80, 2);
-    draw_int(8, 80, 3);
-    draw_int(2, 80, 4);
-
-    draw_int(26, 90, 5);
-    draw_int(20, 90, 6);
-    draw_int(14, 90, 7);
-    draw_int(8, 90, 8);
-    draw_int(2, 90, 9);
+    draw_int(26, 70, current_score / 100);
+    draw_int(20, 70, (current_score / 10) % 10);
+    draw_int(14, 70, current_score % 10);
 }
 
 void game(enum GameState *state)
 {
     // get status of buttons
     btn = getbtns();
-
-    draw_score();
 
     // just slow things down
     delay(250000);
@@ -504,7 +496,7 @@ void game(enum GameState *state)
     }
 
     // draw next shape below game area
-    draw_shape(70, 4, 1, false, &is_occupied, currentBlock.nextShape);
+    draw_shape(85, 22, 1, false, &is_occupied, currentBlock.nextShape);
 
     // draw shape
     draw_shape(currentBlock.x, currentBlock.y, 1, false, &is_occupied, currentBlock.shape);
@@ -513,7 +505,7 @@ void game(enum GameState *state)
 
     // undraw temporarily, both current shape and next shape
     draw_shape(currentBlock.x, currentBlock.y, 0, false, &is_occupied, currentBlock.shape);
-    draw_shape(70, 4, 0, false, &is_occupied, currentBlock.nextShape);
+    draw_shape(85, 22, 0, false, &is_occupied, currentBlock.nextShape);
 }
 
 void gameover(enum GameState *state)
